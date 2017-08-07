@@ -1,6 +1,9 @@
 package com.example.ghost.clientmessaging;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +23,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    int locationPermission;
+    int cameraPermission;
+    public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
+    public static final int MY_PERMISSIONS_REQUEST_CAMERA = 2;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -63,22 +71,58 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Permission Prompt
+        // The request code used in ActivityCompat.requestPermissions()
+        // and returned in the Activity's onRequestPermissionsResult()
 
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{
-                        Manifest.permission_group.LOCATION,
-                        Manifest.permission_group.CAMERA,
-                        Manifest.permission_group.STORAGE,
-                        Manifest.permission.READ_CONTACTS,
-                        Manifest.permission.WRITE_CONTACTS,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.READ_SMS,
-                        Manifest.permission.RECEIVE_SMS}
-                ,101);
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.WRITE_CONTACTS,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_SMS,
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_FINE_LOCATION};
 
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
     }
 
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
