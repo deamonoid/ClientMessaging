@@ -2,6 +2,7 @@ package com.example.ghost.clientmessaging;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -86,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
+
+        setNotificationData(getIntent().getExtras());
+    }
+
+    private void setNotificationData(Bundle extras){
+
+
     }
 
     public static boolean hasPermissions(Context context, String... permissions) {
@@ -174,9 +182,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            Intent intent = getActivity().getIntent();
+            StringBuilder notification_data = new StringBuilder();
+            if (intent.getExtras()==null){
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            }
+            else if (intent.getExtras().containsKey("message")){
+                notification_data.append(intent.getExtras().get("message"));
+                textView.setText(notification_data);
+            }
             return rootView;
         }
     }
