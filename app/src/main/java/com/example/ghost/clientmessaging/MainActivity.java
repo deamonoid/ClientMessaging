@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         setNotificationData(getIntent().getExtras());
     }
 
-    private void setNotificationData(Bundle extras){
+    private void setNotificationData(Bundle extras) {
 
 
     }
@@ -188,10 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
             Intent intent = getActivity().getIntent();
             StringBuilder notification_data = new StringBuilder();
-            if (intent.getExtras()==null){
+            if (intent.getExtras() == null) {
                 textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            }
-            else if (intent.getExtras().containsKey("message")){
+            } else if (intent.getExtras().containsKey("message")) {
                 notification_data.append(intent.getExtras().get("message"));
                 textView.setText(notification_data);
             }
