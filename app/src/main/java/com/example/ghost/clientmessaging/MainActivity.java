@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import static com.example.ghost.clientmessaging.R.id.container;
+
 public class MainActivity extends AppCompatActivity {
 
     int locationPermission;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -157,39 +159,48 @@ public class MainActivity extends AppCompatActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragmentSurvey extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
+        public PlaceholderFragmentSurvey() {}
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.fragment_survey, container, false);
+            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            textView.setText("This is Survey Page");
+            return rootView;
         }
+    }
 
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragmentLink extends Fragment {
         /**
-         * Returns a new instance of this fragment for the given section
-         * number.
+         * The fragment argument representing the section number for this
+         * fragment.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+
+        public PlaceholderFragmentLink() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_link, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
 
             Intent intent = getActivity().getIntent();
             StringBuilder notification_data = new StringBuilder();
             if (intent.getExtras() == null) {
-                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                textView.setText("This is Link page");
             } else if (intent.getExtras().containsKey("message")) {
                 notification_data.append(intent.getExtras().get("message"));
                 textView.setText(notification_data);
@@ -212,7 +223,16 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            Fragment fragment = null;
+            switch(position) {
+                case 0:
+                    fragment = new PlaceholderFragmentSurvey();
+                    break;
+                case 1:
+                    fragment = new PlaceholderFragmentLink();
+                    break;
+            }
+            return fragment;
         }
 
         @Override
@@ -227,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return "SURVEY";
                 case 1:
-                    return "LINKS";
+                    return "LINK";
             }
             return null;
         }
